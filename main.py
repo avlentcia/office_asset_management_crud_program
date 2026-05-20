@@ -1,56 +1,154 @@
 # ===================================
-# [Your Program Title]
+# [Office Asset Management CRUD Program]
 # ===================================
-# Developed by. Bayu Prasetya
-# JCDS - [Class Batch]
+# Developed by. Valencia
+# JCDS - [33]
 
 
 # /************************************/
 
 # /===== Data Model =====/
 # Create your data model here
-data = [] # Example data model
+asset = [
+    {"txn_id": 1, "emp_id": "A001", "emp_name": "Andi", "asset_name":"laptop", "status":"borrowed"},
+    {"txn_id": 2, "emp_id": "A002", "emp_name": "Budi", "asset_name":"projector", "status":"borrowed"},
+    {"txn_id": 3, "emp_id": "A003", "emp_name": "Caca", "asset_name":"laptop", "status":"requested"}
+]
 
 
 # /===== Feature Program =====/
 # Create your feature program here
-def read():
-    """Function for read the data
-    """
-    return
 
-def create():
-    """Function for create the data
-    """
-    return
+
+def main():
+    print("\n===Office Asset Management Program===\n")
+    print("1. View report")
+    print("2. Add request")
+    print("3. Update status")
+    print("4. Delete request")
+    print("5. Exit program\n")
+    input_menu = input("Enter menu [1-5]: ")
+    return input_menu
+
+def read_all(data):
+    print("\n===All Report===")
+    print(f"{"Txn ID |":<10}{"Employee ID |":<10}{"Employee Name |":<10}{"Asset Name |":<10}{"Status":<10}")
+    print("-" *60)
+    for all in data:
+        all_id = all["txn_id"]
+        all_emp_id = all["emp_id"]
+        all_emp_name = all["emp_name"]
+        all_asset_name = all["asset_name"]
+        all_status = all["status"]
+        print(f"{all_id:<10}{all_emp_id:<15}{all_emp_name:<15}{all_asset_name:<10}{all_status:<10}")
+
+def search(search_input, key):
+    search_result = []
+    for item in asset:
+        keys = item[key]
+        if search_input.lower() in keys.lower():
+            search_result.append(item)
+    read_all(search_result)
+
+def add(new_txn_id, new_emp_id, new_emp_name, new_asset_name, new_status):
+    added_data = {
+        "txn_id": (new_txn_id+ 1),
+        "emp_id": new_emp_id,
+        "emp_name": new_emp_name.capitalize(),
+        "asset_name": new_asset_name,
+        "status": new_status
+    }
+    print(added_data)
+    confirm = input("Confirm to add new request? [y/n]: ")
+    if confirm == "y":
+        asset.append(added_data)
+        print("Request is successfully added.")
+    else:
+        print("Request is cancelled")
+    read_all(asset)
 
 def update():
-    """Function for update the data
-    """
     return
 
 def delete():
-    """Function for delete the data
-    """
     return
 
 # /===== Main Program =====/
 # Create your main program here
-def main():
-    """Function for main program
-    """
 
-    input_user = input("Insert your option: ")
-    if input_user == "1":
-        read()
-    elif input_user == "2":
-        create()
-    elif input_user == "3":
-        update()
-    elif input_user == "4":
+running = True
+while running:
+    input_menu = main()
+    #view report
+    if input_menu == "1":
+        print("\n===View Report===")
+        print("1. All report")
+        print("2. Report based on status")
+        print("3. Report based on asset name")
+        print("4. Report based on employee id")
+        print("5. Main menu\n")
+        input_sub_menu = input("Enter menu [1-5]: ")
+        
+        #read all
+        if input_sub_menu == "1":
+           read_all(asset)
+
+        #based on status
+        elif input_sub_menu == "2":
+            print("\nView report based on status: ")
+            print("1. Requested")
+            print("2. Borrowed")
+            print("3. Returned")
+            input_status_menu = input("choose status [1-3]: ")
+            if input_status_menu == "1":
+                search("requested", "status")
+            elif input_status_menu == "2":
+                search("borrowed", "status")
+            elif input_status_menu == "3":
+                search("returned", "status")
+            else:
+                print("\nInput is not valid!")
+        
+        # based on asset name
+        elif input_sub_menu == "3":
+            search_asset_name = input("Search asset name: ")
+            search(search_asset_name, "asset_name")
+
+        # based on employee id
+        elif input_sub_menu == "4":
+            search_emp_id = input("Search using employee id: ")
+            search(search_emp_id, "emp_id")
+
+        elif input_sub_menu == "5":
+            continue
+
+        else:
+            print("Input is not valid !")
+
+    #add request    
+    elif input_menu == "2":
+        print("===Add new request===")
+        new_txn_id = asset[-1]["txn_id"]
+        new_emp_id = input("Enter employee id: ")
+        new_emp_name = input("Enter employee name: ")
+        new_asset_name = input("Enter asset name: ")
+        new_status = "requested"
+        add(new_txn_id, new_emp_id, new_emp_name, new_asset_name, new_status)
+
+    #update status
+    elif input_menu == "3":
+        print("===Update Asset Status==")
+        read_all(asset)
+        input_txn = input("Enter the txn id you want to update: ")
+        search(input_txn, "txn_id")
+
+    elif input_menu == "4":
         delete()
+    elif input_menu == "5":
+        running = False
     else:
         print("Input is not valid !")
+        print("Please enter the right menu")
 
 
 if __name__ == "__main__":
