@@ -67,11 +67,46 @@ def add(new_txn_id, new_emp_id, new_emp_name, new_asset_name, new_status):
         print("Request is cancelled")
     read_all(asset)
 
-def update():
-    return
+def update(input_txn):
+    for i in range(len(asset)):
+        if i == input_txn - 1:
+            print(asset[i])
+            print(f"\nUpdate status of txn id {input_txn} from {asset[i]["status"]} to: ")
+            print("1. Borrowed")
+            print("2. Returned")
+            change = input("Choose status: ")
+            if change == "1":
+                confirm = input("Confirm to update status? (y/n): ")
+                if confirm == "y":
+                    asset[i]["status"] = "borrowed"
+                    print("Status updated to borrowed.")
+                else:
+                    print("Status is not updated.")
+            elif change == "2" and asset[i]["status"] == "borrowed":
+                confirm = input("Confirm to update status? (y/n): ")
+                if confirm == "y":
+                    asset[i]["status"] = "returned"
+                    print("Status updated to returned.")
+                else:
+                    print("Status is not updated.")
+            
+            elif change == "2" and asset[i]["status"] != "borrowed":
+                 print("Asset is not borrowed yet.")
 
-def delete():
-    return
+            else:
+                print("Input is not valid.")
+
+def delete(del_txn):
+    for i in range(len(asset)):
+        if i == del_txn - 1:
+            print(asset[i])
+            confirm_del = input("Confirm to delete request? (y/n): ")
+            if confirm_del == "y":
+                asset.pop(i)
+                print("The request has been successfully deleted.")
+            else:
+                print("Delete request is cancelled")
+    
 
 # /===== Main Program =====/
 # Create your main program here
@@ -139,17 +174,21 @@ while running:
     elif input_menu == "3":
         print("===Update Asset Status==")
         read_all(asset)
-        input_txn = input("Enter the txn id you want to update: ")
-        search(input_txn, "txn_id")
+        input_txn = int(input("Enter the txn id you want to update: "))
+        update(input_txn)
+        read_all(asset)
 
+    #delete txn
     elif input_menu == "4":
-        delete()
+        print("===Delete Request===")
+        read_all(asset)
+        del_txn = int(input("Enter the txn_id you want to delete: "))
+        delete(del_txn)
+        read_all(asset)
+
     elif input_menu == "5":
         running = False
+
     else:
         print("Input is not valid !")
         print("Please enter the right menu")
-
-
-if __name__ == "__main__":
-    main()
