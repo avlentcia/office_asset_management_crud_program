@@ -53,19 +53,23 @@ def search(search_input, key):
 def add(new_txn_id, new_emp_id, new_emp_name, new_asset_name, new_status):
     added_data = {
         "txn_id": (new_txn_id+ 1),
-        "emp_id": new_emp_id,
-        "emp_name": new_emp_name.capitalize(),
+        "emp_id": new_emp_id.capitalize(),
+        "emp_name": new_emp_name.title(),
         "asset_name": new_asset_name,
         "status": new_status
     }
-    print(added_data)
-    confirm = input("Confirm to add new request? [y/n]: ")
-    if confirm == "y":
-        asset.append(added_data)
-        print("Request is successfully added.")
+    if len(new_emp_id) == 4:
+        print(added_data)
+        confirm = input("Confirm to add new request? [y/n]: ")
+        if confirm == "y":
+            asset.append(added_data)
+            print("Request is successfully added.")
+        else:
+            print("Request is cancelled")
+        read_all(asset)
     else:
-        print("Request is cancelled")
-    read_all(asset)
+        print("\nEmployee ID is invalid.")
+        print("Please enter valid employee ID.")
 
 def update(input_txn):
     for i in range(len(asset)):
@@ -75,7 +79,7 @@ def update(input_txn):
             print("1. Borrowed")
             print("2. Returned")
             change = input("Choose status: ")
-            if change == "1":
+            if change == "1" and asset[i]["status"] == "requested":
                 confirm = input("Confirm to update status? (y/n): ")
                 if confirm == "y":
                     asset[i]["status"] = "borrowed"
@@ -94,7 +98,11 @@ def update(input_txn):
                  print("Asset is not borrowed yet.")
 
             else:
-                print("Input is not valid.")
+                print("\nInput is not valid.")
+                print("Can not update status.")
+        
+    else:
+        print("\nPlease enter valid Txn ID.")
 
 def delete(del_txn):
     for i in range(len(asset)):
@@ -106,6 +114,8 @@ def delete(del_txn):
                 print("The request has been successfully deleted.")
             else:
                 print("Delete request is cancelled")
+    else:
+        print("\nPlease enter valid Txn ID.")
     
 
 # /===== Main Program =====/
@@ -191,4 +201,4 @@ while running:
 
     else:
         print("Input is not valid !")
-        print("Please enter the right menu")
+        print("Please enter the right menu.")
